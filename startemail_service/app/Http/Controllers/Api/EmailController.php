@@ -11,6 +11,7 @@ class EmailController extends Controller
     public function sendEmail(Request $request)
     {
         $email = $request->all();
+
         Email::create($email);
 
         return response()->json(['success' => 'Email saved'], 201);

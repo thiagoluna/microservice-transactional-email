@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Email;
+use App\Observers\KafkaEmailObserver;
 use Illuminate\Support\ServiceProvider;
 use PHPEasykafka\Broker;
 use PHPEasykafka\BrokerCollection;
@@ -50,6 +52,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Email::observe(KafkaEmailObserver::class);
     }
 }
