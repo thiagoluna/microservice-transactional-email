@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Kafka\StatusHandler;
+use App\Kafka\EmailHandler;
 use Illuminate\Console\Command;
 use Psr\Container\ContainerInterface;
 
@@ -13,7 +13,7 @@ class KafkaConsumer extends Command
      *
      * @var string
      */
-    protected $signature = 'kafka:consume {topic} {group}';
+    protected $signature = 'kafka:consumer {topic} {group}';
 
     /**
      * The console command description.
@@ -62,6 +62,6 @@ class KafkaConsumer extends Command
         $this->info("Consuming topic from kafka");
 
         //Start consumer process
-        $consumer->consume(120*10000, [StatusHandler::class]);
+        $consumer->consume(120*10000, [EmailHandler::class]);
     }
 }

@@ -15,8 +15,9 @@ class EmailService
 
     public function update()
     {
-        $email = Email::find($this->data->status->id);
+        $email = Email::find($this->data->id);
 
-        $email->update($this->data->status->status);
+        $email->status = $this->data->status;
+        $email->save();
     }
 }
