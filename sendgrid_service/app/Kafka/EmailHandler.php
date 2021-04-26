@@ -30,6 +30,7 @@ class EmailHandler implements KafkaConsumerHandlerInterface
 
     public function __invoke(\RdKafka\Message $message, \RdKafka\KafkaConsumer $consumer)
     {
+        echo $message->payload;
         $payload = json_decode($message->payload);
 
         $id             = $payload->id;
@@ -37,11 +38,9 @@ class EmailHandler implements KafkaConsumerHandlerInterface
         $emailTo        = $payload->email;
         $subject        = $payload->subject;
         $content        = $payload->content;
-        $sentFromEmail  = $payload->sentFromEmail;
-        $sentFromName   = $payload->sentFromName;
 
         $email = new Mail();
-        $email->setFrom($sentFromEmail, $sentFromName);
+        $email->setFrom(env('SENDGRID_FROM_EMAIL'), env('SENDGRID_FROM_NAME'));
         $email->setSubject($subject);
         $email->addContent(
             "text/html", $content
@@ -58,6 +57,7 @@ class EmailHandler implements KafkaConsumerHandlerInterface
         //$consumer->commit();
         $payload = [];
         $payload['id'] = $id;
+        $payload['service'] = 'SendGrid';
         $payload['status'] = $response->statusCode();
 
         $this->producer->produce(json_encode($payload));

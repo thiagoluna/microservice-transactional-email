@@ -32,7 +32,10 @@ class KafkaEmailObserver
      */
     public function created(Email $email)
     {
-        //$this->producer->produce($email->toJson());
+        $email->content = request('content');
+
+        //Push email data to 'emails' Topic
+        $this->producer->produce($email->toJson());
 
     }
 
