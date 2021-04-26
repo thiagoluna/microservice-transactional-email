@@ -17,7 +17,7 @@ class SendEmailController extends Controller
         $sentFromEmail   = $request->get('sentFromEmail');
         $sentFromName    = $request->get('sentFromName');
 
-        $mj = new \Mailjet\Client('cbb5722bfb250d532977ebb7060fa169','695d07c33de7906aeb081bac8bcd1009',true,['version' => 'v3']);
+        $mj = new \Mailjet\Client(env('MAILJET_KEY'),env('MAILJET_SECRET'),true,['version' => 'v3']);
         $body_v31 = [
             'Messages' => [
                 [

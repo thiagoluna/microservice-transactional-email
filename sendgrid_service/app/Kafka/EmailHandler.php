@@ -4,20 +4,22 @@
 namespace App\Kafka;
 
 
-use App\Services\EmailService;
+use App\Services\SendGridService;
 use PHPEasykafka\KafkaConsumerHandlerInterface;
 use PHPEasykafka\KafkaProducer;
 use Psr\Container\ContainerInterface;
-use SendGrid\Mail\Mail;
 
 class EmailHandler implements KafkaConsumerHandlerInterface
 {
     private $topicConf;
     private $brokerCollection;
     private $producer;
+    private $sendGridService;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, SendGridService $sendGridService)
     {
+        $this->sendGridService = $sendGridService;
+
         $this->topicConf = $container->get("KafkaTopicConfig");
         $this->brokerCollection = $container->get("KafkaBrokerCollection");
 
@@ -33,33 +35,10 @@ class EmailHandler implements KafkaConsumerHandlerInterface
         echo $message->payload;
         $payload = json_decode($message->payload);
 
-        $id             = $payload->id;
-        $name           = $payload->name;
-        $emailTo        = $payload->email;
-        $subject        = $payload->subject;
-        $content        = $payload->content;
-
-        $email = new Mail();
-        $email->setFrom(env('SENDGRID_FROM_EMAIL'), env('SENDGRID_FROM_NAME'));
-        $email->setSubject($subject);
-        $email->addContent(
-            "text/html", $content
-        );
-        $email->addTo($emailTo, $name);
-
-        $sendgrid = new \SendGrid(env('SENDGRID_KEY'));
-        try {
-            $response = $sendgrid->send($email);
-        } catch (\Exception $e) {
-            echo 'Caught exception: ' .  $e->getMessage() . "\n";
-        }
+        $statusSentEmail = $this->sendGridService->sendEmail($payload);
 
         //$consumer->commit();
-        $payload = [];
-        $payload['id'] = $id;
-        $payload['service'] = 'SendGrid';
-        $payload['status'] = $response->statusCode();
 
-        $this->producer->produce(json_encode($payload));
+        $this->producer->produce(json_encode($statusSentEmail));
     }
 }
