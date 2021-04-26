@@ -15,8 +15,8 @@ class StatusHandler implements KafkaConsumerHandlerInterface
         echo $message->payload;
         $payload = json_decode($message->payload);
 
-        $emailService = new EmailService($payload);
-        $emailService->update();
+        $emailService = new EmailService();
+        $emailService->update($payload);
         $consumer->commit();
     }
 }

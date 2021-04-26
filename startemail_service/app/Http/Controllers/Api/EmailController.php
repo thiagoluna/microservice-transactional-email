@@ -3,25 +3,32 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Email;
-use Illuminate\Http\Request;
-use PHPEasykafka\KafkaProducer;
-use Psr\Container\ContainerInterface;
+use App\Http\Requests\EmailRequest;
+use App\Services\EmailService;
+
 
 class EmailController extends Controller
 {
-    public function sendEmail(Request $request)
-    {
-        $email = $request->all();
-        Email::create($email);
+    private $emailService;
 
-        return response()->json(['success' => 'Email saved and sent to queue.'], 201);
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
     }
 
-    public function listEmail()
+    public function sendEmail(EmailRequest $request)
     {
-        $emails = Email::All();
+        $result = $this->emailService->store($request);
 
+        if ($result)
+            return response()->json(['success' => 'Email saved and sent to queue.'], 201);
+
+        return response()->json(['error' => 'Email Not saved and Not Sent to queue'], 500);
+    }
+
+    public function listAll()
+    {
+        $emails = $this->emailService->listAll();
         return response()->json($emails);
     }
 }

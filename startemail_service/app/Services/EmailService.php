@@ -3,21 +3,26 @@
 namespace App\Services;
 
 use App\Models\Email;
+use Illuminate\Http\Request;
 
 class EmailService
 {
-    private $payload;
-
-    public function __construct($payload)
+    public function listAll()
     {
-        $this->payload = $payload;
+        return Email::all();
     }
 
-    public function update()
+    public function store(Request $request): Email
     {
-        $email = Email::find($this->payload->id);
-        $email->status = $this->payload->status;
-        $email->service = $this->payload->service;
+        $email = $request->all();
+        return Email::create($email);
+    }
+
+    public function update($payload): void
+    {
+        $email = Email::find($payload->id);
+        $email->status = $payload->status;
+        $email->service = $payload->service;
 
         $email->update();
     }
