@@ -59,13 +59,11 @@ class SendEmailController extends Controller
         $id = $email['Sent'][0]['MessageID'];
         $id = preg_replace("/[^0-9]/", "", $id);
 
-
-//        $id = 576460759551350929;
-
         $response = $mj->get(Resources::$Message, ['id' => $id]);
         $response->success() && var_dump($response->getData());
 
         $email = $response->getData();
-        var_dump($email[0]['Status']);
+
+        return response()->json(['success' => "Email sent. CodeStatus: {$email[0]['Status']}"], 200);
     }
 }
