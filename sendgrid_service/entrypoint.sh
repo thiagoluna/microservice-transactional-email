@@ -4,6 +4,10 @@
 set -m
 
 # Start the primary process and put it in the background
+chown -R www-data:www-data .
+composer install
+php artisan key:generate
+php artisan migrate
 php-fpm &
 
 # Start the helper process
