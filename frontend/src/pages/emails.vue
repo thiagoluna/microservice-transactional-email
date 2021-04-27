@@ -29,7 +29,7 @@
 export default {
     name: "emails",
     mounted() {
-        this.$store.dispatch("getEmails")
+       this.getEmails()
     },
     computed: {
         emails () {
@@ -37,7 +37,12 @@ export default {
         }
     },
     methods: {
-
+        getEmails () {
+            this.$store.dispatch("getEmails")
+                .catch(error => {
+                    this.$vToastify.error("Error to Load Emails", 'Ops');
+                })
+        }
     }
 }
 </script>

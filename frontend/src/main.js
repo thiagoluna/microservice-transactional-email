@@ -1,4 +1,5 @@
 require('./bootstrap/bootstrap')
+require('./plugins/vue-toastify')
 import Vue from 'vue'
 import DefaultTemplate from './layouts/DefaultTemplate'
 import  router from './routers/router'

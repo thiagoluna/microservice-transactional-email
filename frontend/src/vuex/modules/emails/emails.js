@@ -13,14 +13,15 @@ export default {
         }
     },
     actions: {
-        getEmails ({ commit }) {
+        getEmails ({commit}) {
             return axios.get(`${API_VERSION}/listemail`)
                 .then(response => {
                     commit('GET_EMAILS', response.data)
                 })
-                .catch(errors => {
-                    console.log(errors)
-                })
+        },
+        sendEmail ({ commit }, params) {
+            return axios.post(`${API_VERSION}/sendemail`, params)
+
         }
     },
     getters: {
