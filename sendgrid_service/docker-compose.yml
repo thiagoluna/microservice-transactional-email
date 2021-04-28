@@ -1,40 +1,10 @@
 version: '3'
 services:
   sendgridapp:
-    restart: unless-stopped
+    restart: always
     build: .
     volumes:
       - ./:/var/www
-    depends_on:
-      - sendgridapp-mysql
-      - sendgridapp-redis
-
-  sendgridapp-mysql:
-    image: mysql:5.7.22
-    command: --innodb-use-native-aio=0
-    restart: unless-stopped
-    ports:
-      - "3306"
-    volumes:
-      - "./.docker/dbdata:/var/lib/mysql"
-    environment:
-      MYSQL_DATABASE: sendgridapp
-      MYSQL_ROOT_PASSWORD: root
-
-  sendgridapp-nginx:
-    build: ./.docker/nginx
-    restart: unless-stopped
-    ports:
-      - "8002:80"
-    volumes:
-      - ./:/var/www
-    depends_on:
-      - sendgridapp
-
-  sendgridapp-redis:
-    image: redis:alpine
-    expose:
-      - 6379
 
 networks:
   default:

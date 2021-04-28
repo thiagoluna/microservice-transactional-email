@@ -1,40 +1,10 @@
 version: '3'
 services:
   mailjetapp:
-    restart: unless-stopped
+    restart: always
     build: .
     volumes:
       - ./:/var/www
-    depends_on:
-      - mailjetapp-mysql
-      - mailjetapp-redis
-
-  mailjetapp-mysql:
-    image: mysql:5.7.22
-    command: --innodb-use-native-aio=0
-    restart: unless-stopped
-    ports:
-      - "3306"
-    volumes:
-      - "./.docker/dbdata:/var/lib/mysql"
-    environment:
-      MYSQL_DATABASE: mailjetapp
-      MYSQL_ROOT_PASSWORD: root
-
-  mailjetapp-nginx:
-    build: ./.docker/nginx
-    restart: unless-stopped
-    ports:
-      - "8003:80"
-    volumes:
-      - ./:/var/www
-    depends_on:
-      - mailjetapp
-
-  mailjetapp-redis:
-    image: redis:alpine
-    expose:
-      - 6379
 
 networks:
   default:
