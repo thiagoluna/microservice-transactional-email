@@ -18,7 +18,8 @@ class EmailController extends Controller
 
     public function sendEmail(EmailRequest $request)
     {
-        $result = $this->emailService->store($request);
+        $data = $request->all();
+        $result = $this->emailService->store($data);
 
         if ($result)
             return response()->json(['success' => 'Email saved and sent to queue.'], 201);

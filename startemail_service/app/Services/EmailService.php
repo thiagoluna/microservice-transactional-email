@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Events\EmailStoredEvent;
 use App\Models\Email;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EmailService
 {
@@ -12,10 +14,18 @@ class EmailService
         return Email::orderBy('id', 'DESC')->get();
     }
 
-    public function store(Request $request): Email
+    public function store($data): bool
     {
-        $email = $request->all();
-        return Email::create($email);
+        $email = Email::create($data);
+
+        if ($email) {
+            $email->content = $data['content'];
+            event(new EmailStoredEvent($email));
+
+            return true;
+        }
+
+        return false;
     }
 
     public function update($payload): void
@@ -25,5 +35,18 @@ class EmailService
         $email->service = $payload->service;
 
         $email->update();
+    }
+
+    public function validateEmail($email): bool
+    {
+        $validator = Validator::make(
+            ['email' => $email],
+            ['email' => 'email']
+        );
+
+        if ($validator->fails())
+            return false;
+
+        return true;
     }
 }

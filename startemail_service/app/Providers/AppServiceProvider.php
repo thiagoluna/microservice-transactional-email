@@ -52,6 +52,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Email::observe(KafkaEmailObserver::class);
+        //
     }
 }
