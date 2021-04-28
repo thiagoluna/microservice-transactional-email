@@ -9,7 +9,7 @@ class EmailService
 {
     public function listAll()
     {
-        return Email::all();
+        return Email::orderBy('id', 'DESC')->get();
     }
 
     public function store(Request $request): Email

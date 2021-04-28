@@ -13,7 +13,7 @@ class KafkaConsumer extends Command
      *
      * @var string
      */
-    protected $signature = 'kafka:consume {topic} {group}';
+    protected $signature = 'kafka:consumer {topic} {group}';
 
     /**
      * The console command description.
