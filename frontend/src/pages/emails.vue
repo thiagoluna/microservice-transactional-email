@@ -22,10 +22,15 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-12 mt-3 d-flex justify-content-center">
+            <paginate :pagination="emails" @paginate="getEmails"></paginate>
+        </div>
     </div>
 </template>
 
 <script>
+import Pagination from "../layouts/Pagination";
+
 export default {
     name: "emails",
     mounted() {
@@ -33,20 +38,36 @@ export default {
     },
     computed: {
         emails () {
-            return this.$store.state.Emails.items
+            return this.$store.state.Emails.items.data
         }
     },
+    params () {
+      return {
+          page: this.emails.current_page
+      }
+    },
     methods: {
-        getEmails () {
-            this.$store.dispatch("getEmails")
+        getEmails (page = 1) {
+            this.$store.dispatch("getEmails", {...this.params, page})
                 .catch(error => {
                     this.$vToastify.error("Error to Load Emails", 'Ops');
                 })
         }
+    },
+    components: {
+        paginate: Pagination
     }
 }
 </script>
 
 <style scoped>
+.btn-primary, .btn-primary:visited {
+    background-color: #ff8000 !important;
+    border-color: #ff8000 !important;
+}
 
+.btn-primary:hover, .btn-primary:active {
+    background-color: #cd761f !important;
+    border-color: #cd761f !important;
+}
 </style>

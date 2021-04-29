@@ -13,8 +13,8 @@ export default {
         }
     },
     actions: {
-        getEmails ({commit}) {
-            return axios.get(`${API_VERSION}/listemail`)
+        getEmails ({commit}, params) {
+            return axios.get(`${API_VERSION}/listemail`, {params})
                 .then(response => {
                     commit('GET_EMAILS', response.data)
                 })

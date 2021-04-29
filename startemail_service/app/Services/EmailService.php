@@ -13,7 +13,7 @@ class EmailService
 {
     public function listAll()
     {
-        return Email::orderBy('id', 'DESC')->get();
+        return Email::orderBy('id', 'DESC')->paginate(7);
     }
 
     public function store($data): bool
