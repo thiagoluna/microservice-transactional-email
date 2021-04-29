@@ -5,6 +5,7 @@ namespace App\Kafka;
 
 
 use App\Services\MailjetService;
+use Illuminate\Support\Facades\Log;
 use PHPEasykafka\KafkaConsumerHandlerInterface;
 use PHPEasykafka\KafkaProducer;
 use Psr\Container\ContainerInterface;
@@ -35,9 +36,14 @@ class EmailMailJetHandler implements KafkaConsumerHandlerInterface
         $payload = json_decode($message->payload);
         print_r($payload);
 
+        $logMessage = "Email ID {$payload->id} consumed from queue emails Topic";
+        Log::channel('consumer')->info($logMessage);
+
         $statusSentEmail = $this->mailjetService->SendEmail($payload);
 
         //Produce messagoe in Status Topic
         $this->producer->produce(json_encode($statusSentEmail));
+        $logMessage = "Email ID {$payload->id} published to queue in status Topic";
+        Log::channel('publisher')->info($logMessage);
     }
 }

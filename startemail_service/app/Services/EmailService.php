@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\EmailStoredEvent;
 use App\Models\Email;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class EmailService
@@ -35,6 +36,9 @@ class EmailService
         $email->service = $payload->service;
 
         $email->update();
+
+        $logMessage = "Email ID {$email->id} consumed from queue status Topic - service: {$email->service}";
+        Log::channel('consumer')->info($logMessage);
     }
 
     public function validateEmail($email): bool
