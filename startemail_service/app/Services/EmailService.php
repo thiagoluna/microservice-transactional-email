@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\EmailStoredEvent;
+use App\Events\FallbackEvent;
 use App\Models\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,7 @@ class EmailService
 
         if ($email) {
             $email->content = $data['content'];
+            //Push email to 'sendgrid' Topic
             event(new EmailStoredEvent($email));
 
             return true;
@@ -35,9 +37,19 @@ class EmailService
         $email->status = $payload->status;
         $email->service = $payload->service;
 
+        //Fallback to a secondary service
+        if ($payload->status == '500' || $payload->status == '503') {
+
+            //Push email  to queue 'mailjet' Topic (secondary service)
+            event(new FallbackEvent($email));
+
+            $email->status = 'Fallback to Service 2';
+        }
+
+        //Update database - Frontend will show this info
         $email->update();
 
-        $logMessage = "Email ID {$email->id} consumed from queue status Topic - service: {$email->service}";
+        $logMessage = "Email ID {$email->id} consumed from queue status Topic;service:{$email->service};status:{$email->status}";
         Log::channel('consumer')->info($logMessage);
     }
 

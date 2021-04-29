@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Email extends Model
 {
     protected $fillable = [
-        'name', 'email', 'subject', 'status', 'service'
+        'name', 'email', 'subject', 'content', 'status', 'service'
     ];
 }

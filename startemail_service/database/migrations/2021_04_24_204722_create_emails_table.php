@@ -18,6 +18,7 @@ class CreateEmailsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('subject');
+            $table->text('content');
             $table->string('service')->nullable();
             $table->string('status')->default('queued');
             $table->timestamps();

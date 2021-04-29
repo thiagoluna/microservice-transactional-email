@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\EmailStoredEvent;
+use App\Events\FallbackEvent;
 use App\Listeners\ProducerEmailStoredListener;
+use App\Listeners\ProducerSecondaryServiceFallbackListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         EmailStoredEvent::class => [
             ProducerEmailStoredListener::class
+        ],
+        FallbackEvent::class => [
+            ProducerSecondaryServiceFallbackListener::class
         ]
     ];
 

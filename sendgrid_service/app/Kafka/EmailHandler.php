@@ -36,11 +36,12 @@ class EmailHandler implements KafkaConsumerHandlerInterface
         echo $message->payload;
         $payload = json_decode($message->payload);
 
-        $logMessage = "Email ID {$payload->id} consumed from queue emails Topic";
+        $logMessage = "Email ID {$payload->id} consumed from queue sendgrid Topic";
         Log::channel('consumer')->info($logMessage);
 
         $statusSentEmail = $this->sendGridService->sendEmail($payload);
 
+        //Push to queue status topic the status of Email sent
         $this->producer->produce(json_encode($statusSentEmail));
         $logMessage = "Email ID {$payload->id} published to queue in status Topic";
         Log::channel('publisher')->info($logMessage);

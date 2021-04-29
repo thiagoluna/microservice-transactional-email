@@ -33,6 +33,10 @@ class SendGridService
 
         $payload            = [];
         $payload['id']      = $id;
+        $payload['name']    = $nameTo;
+        $payload['email']   = $emailTo;
+        $payload['subject'] = $subject;
+        $payload['content'] = $content;
         $payload['service'] = 'SendGrid';
         $payload['status']  = $response->statusCode();
 
