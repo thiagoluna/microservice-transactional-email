@@ -31,7 +31,7 @@
                     <div v-if="errors.content" class="text-danger">
                         {{ errors.content[0]}}
                     </div>
-                    <input type="text" class="form-control" id="content" placeholder="Enter the Message" v-model="formData.content">
+                    <input type="text" class="form-control" id="content" placeholder="Enter text/plain or <h1>text/html</h1>" v-model="formData.content">
                 </div>
                 <div class="col-12">
                     <div class="mt-3">
