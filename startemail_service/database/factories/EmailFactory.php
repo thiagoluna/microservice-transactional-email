@@ -11,6 +11,7 @@ $factory->define(Email::class, function (Faker $faker) {
         'name' => 'Takeaway',
         'email' => 'contact@email.com',
         'subject' => 'Email Test',
+        'content' => 'Content Test',
         'status' => 'delivered'
     ];
 });
