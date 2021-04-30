@@ -72,6 +72,9 @@ class SendEmailCommand extends Command
 
     public function fillForm($validation = 0)
     {
+        if($validation == 3)
+            $this->info('Please, fill all the fields');
+
         if ($validation) {
             $emailTo = $this->ask('Please, enter a Valid Recipient Email');
         } else {
@@ -82,9 +85,12 @@ class SendEmailCommand extends Command
         if(!$validate = $this->emailService->validateEmail($emailTo))
             $this->fillForm(1);
 
-        $data['name'] = $this->askName();
-        $data['subject'] = $this->askSubject();
-        $data['content'] = $this->askMessage();
+        $data['name'] = $this->ask('Please, enter the Recipient Name');
+        $data['subject'] = $this->ask('Please, enter the Subject');
+        $data['content'] = $this->ask('Please, enter the Message');
+
+        if ($data['name'] == '' || $data['subject'] == '' || $data['content'] == '')
+            $this->fillForm(3);
 
         $result = $this->emailService->store($data);
 
@@ -92,33 +98,6 @@ class SendEmailCommand extends Command
             $this->info("Email to {$data['name']} was sent to queue.");
 
         $this->lastOptionn();
-    }
-
-    public function askName(): ?string
-    {
-        $name = $this->ask('Please, enter the Recipient Name');
-        if ($name == '')
-            $this->askName();
-
-        return $name;
-    }
-
-    public function askSubject(): ?string
-    {
-        $subject = $this->ask('Please, enter the Subject');
-        if ($subject == '')
-            $this->askSubject();
-
-        return $subject;
-    }
-
-    public function askMessage(): ?string
-    {
-        $content = $this->ask('Please, enter the Message');
-        if  ($content == '')
-            $this->askMessage();
-
-        return $content;
     }
 
     public function lastOptionn()
