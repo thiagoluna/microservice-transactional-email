@@ -31,8 +31,7 @@ emails, then send them to Kafka's SendGrid queue.
 The SendGridService, asynchronously, consumes the queue, then sends it via POST to the SendGrid email delivery platform 
 that will effectively send the email to the recipient.  
 <br>
-After having the email sent, SendGridService receives the status and immediately forward it to Kafka's status queue 
-which will consumed by the service that started this process.  
+After having the email sent, SendGridService receives the status and immediately forward it to Kafka's status queue which will consumed by the service that started this process.  
 <br>
 In the case of either 500 or 503 status, the process is restarted, therefore this time sending the message's payload to 
 the Mailjet queue at Kafka.  
