@@ -25,8 +25,7 @@ This project has 5 resources
 
 ## 📝 Description
 The system starts at the process of sending emails through the StartEmailService service which via API or CLI command 
-receives
-emails, then send them to Kafka's SendGrid queue.  
+receives emails, then send them to Kafka's SendGrid queue.  
 <br>
 The SendGridService, asynchronously, consumes the queue, then sends it via POST to the SendGrid email delivery platform 
 that will effectively send the email to the recipient.  
